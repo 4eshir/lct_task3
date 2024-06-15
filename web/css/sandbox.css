@@ -1,0 +1,34 @@
+.main-block-sand {
+    background-color: white;
+    border-radius: 5px;
+    margin-top: 10px;
+    padding: 20px;
+}
+
+.description-block-query {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+}
+
+.param-name {
+    font-weight: 500;
+}
+
+.result-data {
+    background-color: #dcffc8;
+    border-radius: 5px;
+    margin-top: 10px;
+    padding: 20px;
+    display: none;
+    overflow-y: scroll;
+    max-height: 700px;
+}
+
+.data-block {
+    padding: 10px;
+    background-color: #bdeea4;
+    border-radius: 5px;
+}

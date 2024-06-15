@@ -1,0 +1,20 @@
+{
+  "name": "three",
+  "version": "1.0.0",
+  "description": "<p align=\"center\">\r     <a href=\"https://github.com/yiisoft\" target=\"_blank\">\r         <img src=\"https://avatars0.githubusercontent.com/u/993323\" height=\"100px\">\r     </a>\r     <h1 align=\"center\">Yii 2 Basic Project Template</h1>\r     <br>\r </p>",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "three": "^0.164.1"
+  },
+  "devDependencies": {
+    "vite": "^5.2.11"
+  }
+}

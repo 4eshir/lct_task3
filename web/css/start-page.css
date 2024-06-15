@@ -1,0 +1,49 @@
+body {
+    background: linear-gradient(-45deg, #5680E9, #D05D7E, #644BB2, #88B6F4);
+    background-size: 400% 400%;
+    animation: gradient 25s ease infinite;
+    height: 100vh;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.fw-light {
+    margin-top: 50px !important;
+    font-size: 50px;
+    font-family: "Nunito", sans-serif !important;
+}
+
+.fw-light-sub {
+    margin-top: 50px !important;
+    font-size: 25px;
+    font-family: "Nunito", sans-serif !important;
+    text-align: center;
+}
+
+
+.site-index .div-img {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    color: white;
+}
+
+.site-index img {
+    width: 50%; /* Любой желаемый размер изображения */
+    height: auto;
+    display: block;
+    margin: 0 auto; /* Центрирование по горизонтали */
+    margin-top: 20px; /* Дополнительный верхний отступ, если нужно */
+}
