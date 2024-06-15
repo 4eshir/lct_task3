@@ -63,10 +63,10 @@ $username = $user ? $user->login : '---';
                 'options' => ['class' => $headerActive == 'objects' ? 'custom-li-class' : 'default-li-class']
             ],
             [
-                'label' => 'Голосование',
-                'url' => ['/frontend/residents/start-questionnaire'],
-                'linkOptions' => ['class' => $headerActive == 'residents' ? 'header-link-active' : 'header-link'],
-                'options' => ['class' => $headerActive == 'residents' ? 'custom-li-class' : 'default-li-class']
+                'label' => 'Демо',
+                'url' => ['/backend/demo/index'],
+                'linkOptions' => ['class' => $headerActive == 'demo' ? 'header-link-active' : 'header-link'],
+                'options' => ['class' => $headerActive == 'demo' ? 'custom-li-class' : 'default-li-class']
             ],
             [
                 'label' => 'Администрация',
@@ -81,16 +81,16 @@ $username = $user ? $user->login : '---';
                 'options' => ['class' => $headerActive == 'admin-login' ? 'custom-li-class' : 'default-li-class']
             ],
             [
+                'label' => 'Голосование',
+                'url' => ['/frontend/residents/start-questionnaire'],
+                'linkOptions' => ['class' => $headerActive == 'residents' ? 'header-link-active' : 'header-link'],
+                'options' => ['class' => $headerActive == 'residents' ? 'custom-li-class' : 'default-li-class']
+            ],
+            [
                 'label' => 'Разработчикам',
                 'url' => ['/api/doc'],
                 'linkOptions' => ['class' => $headerActive == 'api' ? 'header-link-active' : 'header-link'],
                 'options' => ['class' => $headerActive == 'api' ? 'custom-li-class' : 'default-li-class']
-            ],
-            [
-                'label' => 'Демо',
-                'url' => ['/backend/demo/index'],
-                'linkOptions' => ['class' => $headerActive == 'demo' ? 'header-link-active' : 'header-link'],
-                'options' => ['class' => $headerActive == 'demo' ? 'custom-li-class' : 'default-li-class']
             ],
             [
                 'label' => $username == '---' ? '---' : "Выйти ($username)",

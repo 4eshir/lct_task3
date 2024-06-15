@@ -156,7 +156,7 @@ class ArrangementModelFacade
                 'created_time_parallel' => $this->getCreatedTime(),
                 'created_time_sequence' => $this->getCreatedTime(false),
                 'creators_list' => $this->getCreatorsList(),
-                'style' => $this->getGeneralStyle(),
+                'style' => $this->getStylesList(),
             ];
     }
 
@@ -251,7 +251,7 @@ class ArrangementModelFacade
         return $creators;
     }
 
-    public function getGeneralStyle()
+    public function getStylesList()
     {
         $styles = [];
         foreach ($this->objectsPosition as $objectExt) {

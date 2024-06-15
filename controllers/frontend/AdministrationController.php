@@ -4,6 +4,7 @@ namespace app\controllers\frontend;
 
 use app\components\arrangement\TemplatesManager;
 use app\models\common\ArrangementTemplate;
+use app\models\forms\AnalyticModel;
 use app\models\forms\ChooseTerritoryForm;
 use app\models\forms\ConstructorTerritoryForm;
 use app\models\work\ArrangementTemplateWork;
@@ -66,7 +67,6 @@ class AdministrationController extends Controller
             $names[] = ArrangementTemplateWork::find()->where(['id' => $templateId])->one()->name;
             $descs[] = ArrangementTemplateWork::find()->where(['id' => $templateId])->one()->description;
         }
-
 
         return $this->render('templates', [
             'model' => $matrices,

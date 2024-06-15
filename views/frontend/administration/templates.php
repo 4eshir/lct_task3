@@ -4,8 +4,6 @@
 /** @var $names string[] */
 /** @var $descs string[] */
 
-use app\models\work\TemplateBlockWork;
-use yii\helpers\Url;
 
 $this->title = 'Шаблоны';
 $this->params['breadcrumbs'][] = [
@@ -82,6 +80,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 </div>
+
 <div id="scene-container"></div>
 <div id="anal-block"></div>
 

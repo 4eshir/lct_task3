@@ -77,7 +77,12 @@ class TerritoryArrangementManager
                     $weights = AgesWeightChangeableWork::find()->where(['ages_interval_id' => $interval->ages_interval_id])->andWhere(['territory_id' => $territoryId])->one();
                     break;
                 case TerritoryConcept::TYPE_SELF_VOTES:
-                    // coming soon
+                    $weight = new AgesWeightWork();
+                    $weight->recreation_weight = $votes[0] / 10;
+                    $weight->sport_weight = $votes[1] / 10;
+                    $weight->education_weight = $votes[2] / 10;
+                    $weight->game_weight = $votes[3] / 10;
+                    $weights = $weight;
                     break;
                 default:
                     throw new \DomainException('Неизвестный тип генерации');

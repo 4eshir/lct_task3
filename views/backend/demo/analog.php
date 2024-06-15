@@ -1,12 +1,15 @@
 <?php
 
 use app\components\arrangement\TerritoryConcept;
+use app\models\forms\AnalyticModel;
 use app\models\forms\demo\GenerateAnalogForm;
 use app\models\work\TerritoryWork;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /** @var GenerateAnalogForm $model */
+/** @var AnalyticModel $modelAnal1 */
+/** @var AnalyticModel $modelAnal2 */
 /** @var string $data */
 ?>
 
@@ -48,10 +51,20 @@ use yii\widgets\ActiveForm;
     </div>
 
     <h3>Оригинальное размещение объектов на территории</h3>
+    <?php if ($modelAnal1): ?>
+        <?= $this->render('/analytic-block', [
+            'model' => $modelAnal1,
+        ]) ?>
+    <?php endif; ?>
     <div id="scene-container-1" class="scene-container"></div>
     <div id="anal-block-1"></div>
 
     <h3>Сгенерированное размещение объектов на территории</h3>
+    <?php if ($modelAnal2): ?>
+        <?= $this->render('/analytic-block', [
+            'model' => $modelAnal2,
+        ]) ?>
+    <?php endif; ?>
     <div id="scene-container-2" class="scene-container"></div>
     <div id="anal-block-2"></div>
 

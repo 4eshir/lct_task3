@@ -26,16 +26,6 @@ use yii\widgets\ActiveForm;
             <li><?= Html::a('Приоритетные веса по возрастам', ['/backend/ages-weight/index']) ?><span><?= AgesWeightWork::find()->count() ?></span></li>
         </ul>
     </div>
-
-    <div class="main-block">
-        <h3 class="head-label"><u>Демонстрационные примеры</u></h3>
-
-        <ul class="category-list">
-            <li><?= Html::a('Генератор расстановок МАФ по заданным параметрам', ['/backend/demo/generate']) ?></li>
-            <li><?= Html::a('Генератор аналогов существующим расстановок МАФ', ['/backend/demo/analog']) ?></li>
-            <li><?= Html::a('Генератор расстановок МАФ по шаблонам', ['/frontend/administration/templates']) ?></li>
-        </ul>
-    </div>
 </div>
 
 

@@ -6,6 +6,7 @@ use app\components\arrangement\TemplatesManager;
 use app\components\arrangement\TerritoryConcept;
 use app\components\coordinates\LocalCoordinatesManager;
 use app\facades\TerritoryFacade;
+use app\models\forms\AnalyticModel;
 use app\models\forms\demo\GenerateAnalogForm;
 use app\models\forms\demo\GenerateByParamsForm;
 use app\models\ObjectExtended;
@@ -101,8 +102,13 @@ class DemoController extends Controller
                     ]
                 ]
             );
+
+            $modelAnal = new AnalyticModel();
+            $modelAnal->fill($this->facade->model);
+
             return $this->render('generate', [
                 'model' => $model,
+                'modelAnal' => $modelAnal,
                 'data' => $this->facade->model->getDataForScene(1),
             ]);
 
@@ -128,6 +134,10 @@ class DemoController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $arMatrix = $this->facade->assemblyFixedArrangementByTerritoryId($model->analogTerritoryId);
             $originalFullness = $this->facade->manager->territory->calculateCurrentFullness();
+
+            $modelAnal1 = new AnalyticModel();
+            $modelAnal1->fill($this->facade->model);
+
             $this->facade->generateTerritoryArrangement(
                 TerritoryConcept::TYPE_BASE_WEIGHTS,
                 $model->analogTerritoryId,
@@ -139,8 +149,13 @@ class DemoController extends Controller
                 $model->fullness,
                 $model->fullness == TerritoryConcept::TYPE_FULLNESS_ORIGINAL ? ['originalFullness' => $originalFullness] : []);
 
+            $modelAnal2 = new AnalyticModel();
+            $modelAnal2->fill($this->facade->model);
+
             return $this->render('analog', [
                 'model' => $model,
+                'modelAnal1' => $modelAnal1,
+                'modelAnal2' => $modelAnal2,
                 'data' => $this->facade->model->getDataForScene($model->analogTerritoryId),
             ]);
         }

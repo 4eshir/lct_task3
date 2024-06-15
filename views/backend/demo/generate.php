@@ -1,10 +1,12 @@
 <?php
 
 use app\facades\TerritoryFacade;
+use app\models\forms\AnalyticModel;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /** @var app\models\forms\demo\GenerateByParamsForm $model */
+/** @var app\models\forms\AnalyticModel $modelAnal */
 /** @var string $data */
 
 ?>
@@ -70,6 +72,12 @@ use yii\widgets\ActiveForm;
     </div>
 
     <?php ActiveForm::end(); ?>
+
+    <?php if ($modelAnal): ?>
+        <?= $this->render('/analytic-block', [
+            'model' => $modelAnal,
+        ]) ?>
+    <?php endif; ?>
 
     <div id="scene-container"></div>
     <div id="anal-block"></div>
