@@ -73,6 +73,8 @@ class ObjectWork extends ObjectT
                 'length' => self::convertDistanceToCells($object->length, TerritoryConcept::STEP),
                 'height' => self::convertDistanceToCells($object->height, TerritoryConcept::STEP),
                 'link' => $object->model_path,
+                'name' => $object->name,
+                'cost' => $object->cost,
             ];
         }
 
