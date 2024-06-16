@@ -199,7 +199,7 @@ use app\models\work\ObjectWork;
     }
 
     // Массив разрешенных к взаимодействию объектов
-    var interactiveObjects = [rectangle, sphere];
+    var interactiveObjects = [];
 
     // Переменные для отслеживания перемещения объекта
     var isDragging = false;
@@ -444,25 +444,15 @@ use app\models\work\ObjectWork;
     // Отрисовка тени на сцене
     function setColorGridMesh()
     {
-        var widthObject = isRotation() ? getWidthSelectedObject() : getLenghtSelectedObject();
-        var heightObject = isRotation() ? getLenghtSelectedObject() : getWidthSelectedObject();
-
-        var rotateWidth = selectedObjectRotateX ? drift : 0;
-        var rotateHeight = selectedObjectRotateY ? drift : 0;
-
-        if (isRotation())
-        {
-            var temp = rotateWidth;
-            rotateWidth = rotateHeight;
-            rotateHeight = temp;
-        }
+        var widthObject = getWidthSelectedObject();
+        var heightObject = getLenghtSelectedObject();
 
         var dotsObject = [];
         for (var i = 0; i < widthObject * heightObject; i++)
         {
             var oneDot = Object.create(dot);
-            var x = i % widthObject - widthObject / 2 + rotateHeight + selectedObject.position.x;
-            var y = Math.floor(i / widthObject) - heightObject / 2 + rotateWidth + selectedObject.position.y;
+            var x = i % widthObject - widthObject / 2 + driftCellX + selectedObject.position.x;
+            var y = Math.floor(i / widthObject) - heightObject / 2 + driftCellY + selectedObject.position.y;
 
             oneDot.addDot(x, y);
             dotsObject.push(oneDot);
@@ -561,8 +551,8 @@ use app\models\work\ObjectWork;
             var intersects = getIntersects(event);
 
             // Учитываем половину ширины и половину длины объекта при ограничении перемещения
-            var halfWidth = isRotation() ? getWidthSelectedObject() / 2 : getLenghtSelectedObject() / 2;
-            var halfHeight = isRotation() ? getLenghtSelectedObject() / 2 : getWidthSelectedObject() / 2;
+            var halfWidth = getWidthSelectedObject()
+            var halfHeight = getLenghtSelectedObject()
             var maxX = gridSizeX / 2 - drift - halfWidth;
             var minX = -gridSizeX / 2 + drift + halfWidth;
             var maxY = gridSizeY / 2 - drift - halfHeight;
@@ -600,8 +590,8 @@ use app\models\work\ObjectWork;
             coordinate.addPoint90deg(Math.round(newX) + rotateWidth, Math.round(newY) + rotateHeight);
             updatePositionSelectedObject(coordinate.getPoint());
 
-            setColorGridMesh();
             updateBoxHelper();
+            setColorGridMesh();
         }
     }
 
