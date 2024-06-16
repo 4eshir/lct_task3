@@ -151,7 +151,7 @@ class ObjectAnalytic
         $diffPercent = max(count($shingles1), count($shingles2)) !== 0 ? (1 - count($commonShingles) / max(count($shingles1), count($shingles2))) * 100 : 100;
 
         // Проверяем, превышено ли указанное различие в процентах
-        return (100 - $diffPercent) > $percent;
+        return (100 - $diffPercent) < $percent;
     }
 
     public function checkStringsDiffT(string $str1, string $str2)
