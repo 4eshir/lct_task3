@@ -115,9 +115,11 @@ class ArrangementModelFacade
 
             $resultObjList[] = [
                 'id' => $objectExt->object->id,
+                'name' => $objectExt->object->name,
                 'height' => ObjectWork::convertDistanceToCells($objectExt->object->height, TerritoryConcept::STEP),
                 'width' => ObjectWork::convertDistanceToCells($objectExt->object->width, TerritoryConcept::STEP),
                 'length' => ObjectWork::convertDistanceToCells($objectExt->object->length, TerritoryConcept::STEP),
+                'cost' => $objectExt->object->cost,
                 'rotate' => $objectExt->positionType == TerritoryConcept::HORIZONTAL_POSITION ? TerritoryConcept::HORIZONTAL_POSITION : 90,
                 'link' => $objectExt->object->model_path,
                 'dotCenter' => [
