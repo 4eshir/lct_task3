@@ -14,14 +14,24 @@ use app\models\work\ObjectWork;
     #scene-container canvas {
         border-radius: 15px;
     }
+    .template-wrapper-desc {
+        padding: 30px;
+        background-color: white;
+        border-radius: 15px;
+        margin: 10px 0 10px 0;
+    }
+    .btn-primary {
+        margin: 5px;
+    }
 </style>
 
-<div>
+<div class="template-wrapper-desc">
     <h3>Настроения жителей</h3>
     <span><b>R:</b> <?= $model->averageMindset[ObjectWork::TYPE_RECREATION] ?>% </span>
     <span><b>S:</b> <?= $model->averageMindset[ObjectWork::TYPE_SPORT] ?>% </span>
     <span><b>E:</b> <?= $model->averageMindset[ObjectWork::TYPE_EDUCATION] ?>% </span>
     <span><b>G:</b> <?= $model->averageMindset[ObjectWork::TYPE_GAME] ?>% </span>
+    <div>Стоимость размещения объектов: <span id="cost">0</span> рублей</div>
 </div>
 
 <div>
@@ -41,15 +51,16 @@ use app\models\work\ObjectWork;
     $data = json_decode($jsonString, true);
 
     // Перебираем массив данных
-    foreach($data['data'] as $item) {
+    foreach ($data['data'] as $item) {
         // Создаем кнопку с данными из массива
-        echo '<button class="btn btn-primary" onclick="addObject(' . $item['id'] . ', ' . $item['width'] . ', ' . $item['length'] . ', ' . $item['height'] . ', \'' . $item['link'] . '\')">id: ' . $item['id'] . '</button>';
+        echo '<button class="btn btn-primary" onclick="addObject(' . $item['id'] . ', ' . $item['width'] . ', ' . $item['length'] . ', ' . $item['height'] . ', \'' . $item['link'] . '\', ' . $item['cost'] . ')">' . $item['name'] . '</button>';
     }
 ?>
 
 <script>
     var gridSizeX = '<?php echo json_decode($model->getSize(), true)['width'] + 1;?>';
     var gridSizeY = '<?php echo json_decode($model->getSize(), true)['length'] + 1;?>';
+    var gridSizeZ = 10;
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/build/three.min.js"></script>
@@ -99,7 +110,7 @@ use app\models\work\ObjectWork;
     //-----------------------------------------------
 
     // Добавление объектов
-    function addObject(idObject, width, lenght, height, link)
+    function addObject(idObject, width, lenght, height, link, name)
     {
         const loader = new THREE.GLTFLoader();
         var rotateX = (lenght % 2 === 0) ? drift : 0;
@@ -108,10 +119,10 @@ use app\models\work\ObjectWork;
         const randomColor = Math.floor(Math.random() * 16777215).toString(16);
         var material = new THREE.MeshBasicMaterial({transparent: true, color: parseInt(randomColor, 16), side: THREE.DoubleSide });
 
-        if (height / 3 > axisZ || gridSizeZ < 15 + height)
+        if (height / 3 > axisZ || gridSizeZ < 10 + height)
         {
-            axisZ = height / 3 < 2 ? 3 : height / 3;
-            gridSizeZ = height + 15;
+            axisZ = height / 3;
+            gridSizeZ = height + 10;
         }
 
         if (!link)
@@ -135,6 +146,7 @@ use app\models\work\ObjectWork;
                 });
                 model.scale.set(1, 1, 1);
                 model.position.set(0 + rotateX, 0 + rotateY, 0);
+                model.name = name;
 
                 // Добавляем модель в сцену
                 scene.add(model);
@@ -147,11 +159,15 @@ use app\models\work\ObjectWork;
                 const oneObject = new THREE.Mesh(geometry, material);
 
                 oneObject.position.set(0 + rotateX, 0 + rotateY, height/2);
+                oneObject.name = name;
                 scene.add(oneObject);
                 interactiveObjects.push(oneObject);
                 console.error('Error loading 3D model', error);
             }
         );
+
+        const costElement = document.getElementById('cost');
+        costElement.textContent = parseFloat(costElement.textContent) + parseFloat(name);
     }
 
     var rectangleGeometry = new THREE.BoxGeometry(2, 2, 1);
@@ -283,22 +299,22 @@ use app\models\work\ObjectWork;
         if (Math.abs(degreeCamera) === 360 || degreeCamera === 0)
         {
             degreeCamera = 0;
-            camera.position.set(0, -(gridSizeY / 2), 10);
+            camera.position.set(0, -(gridSizeY / 2), gridSizeZ);
             camera.rotation.set(0.5, 0, 0);
         }
         else if (degreeCamera === 90 || degreeCamera === -270)
         {
-            camera.position.set(-(gridSizeY / 2), 0, 10);
+            camera.position.set(-(gridSizeY / 2), 0, gridSizeZ);
             camera.rotation.set(0, -0.5, -Math.PI/2);
         }
         else if (Math.abs(degreeCamera) === 180)
         {
-            camera.position.set(0, gridSizeX / 2, 10);
+            camera.position.set(0, gridSizeX / 2, gridSizeZ);
             camera.rotation.set(-0.5, 0, Math.PI);
         }
         else if (degreeCamera === -90 || degreeCamera === 270)
         {
-            camera.position.set(gridSizeX / 2, 0, 10);
+            camera.position.set(gridSizeX / 2, 0, gridSizeZ);
             camera.rotation.set(0, 0.5, Math.PI/2);
         }
 
@@ -393,6 +409,7 @@ use app\models\work\ObjectWork;
     document.getElementById('scene-container').addEventListener('wheel', (event) => {
         if (selectedObject && isDragging)
         {
+            event.preventDefault();
             const direction = event.deltaY > 0 ? 1 : -1;
             selectedObject.rotation.z += (Math.PI / 2) * direction;
 
@@ -414,6 +431,8 @@ use app\models\work\ObjectWork;
 
                 updatePositionSelectedObject(selectedObjectRotatePoint.getPoint());
             }
+
+            updateBoxHelper();
         }
     });
 
@@ -425,22 +444,39 @@ use app\models\work\ObjectWork;
     function getWidthSelectedObject()
     {
         const boundingBox = new THREE.Box3().setFromObject(selectedObject);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        return width;
+        return Math.round(boundingBox.max.x - boundingBox.min.x);
+    }
+
+    function getLenghtSelectedObject()
+    {
+        const boundingBox = new THREE.Box3().setFromObject(selectedObject);
+        return Math.round(boundingBox.max.y - boundingBox.min.y);
     }
 
     // Отрисовка тени на сцене
     function setColorGridMesh()
     {
-        console.log(getWidthSelectedObject());
-        /*var widthObject = isRotation() ? selectedObject.geometry.parameters.width : selectedObject.geometry.parameters.height;
-        var heightObject = isRotation() ? selectedObject.geometry.parameters.height : selectedObject.geometry.parameters.width;
+        var widthObject = isRotation() ? getWidthSelectedObject() : getLenghtSelectedObject();
+        var heightObject = isRotation() ? getLenghtSelectedObject() : getWidthSelectedObject();
+
+        var rotateWidth = selectedObjectRotateX ? drift : 0;
+        var rotateHeight = selectedObjectRotateY ? drift : 0;
+
+        if (isRotation())
+        {
+            var temp = rotateWidth;
+            rotateWidth = rotateHeight;
+            rotateHeight = temp;
+        }
 
         var dotsObject = [];
         for (var i = 0; i < widthObject * heightObject; i++)
         {
             var oneDot = Object.create(dot);
-            oneDot.addDot(i % widthObject - widthObject / 2 + drift + selectedObject.position.x, Math.floor(i / widthObject) - heightObject / 2 + drift + selectedObject.position.y)
+            var x = i % widthObject - widthObject / 2 + rotateHeight + selectedObject.position.x;
+            var y = Math.floor(i / widthObject) - heightObject / 2 + rotateWidth + selectedObject.position.y;
+
+            oneDot.addDot(x, y);
             dotsObject.push(oneDot);
         }
 
@@ -469,7 +505,7 @@ use app\models\work\ObjectWork;
                     break;
                 }
             }
-        })*/
+        })
     }
 
     // Проверка пересечения
@@ -524,8 +560,9 @@ use app\models\work\ObjectWork;
 
         // Подгоняем размеры и позицию оболочки
         boxHelper.scale.setFromMatrixScale(selectedObject.matrixWorld);
-        boxHelper.position.copy(boundingBox.getCenter());
-        boxHelper.update(selectedObject);
+        boxHelper.position.set((boundingBox.min.x + boundingBox.max.x) / 2, (boundingBox.min.y + boundingBox.max.y) / 2, (boundingBox.min.z + boundingBox.max.z) / 2);
+        //boxHelper.rotation.z = selectedObject.rotation.z;
+        boxHelper.update();
     }
 
     // Логика перемещения объекта
@@ -536,8 +573,8 @@ use app\models\work\ObjectWork;
             var intersects = getIntersects(event);
 
             // Учитываем половину ширины и половину длины объекта при ограничении перемещения
-            var halfWidth = isRotation() ? selectedObject.geometry.parameters.width / 2 : selectedObject.geometry.parameters.height / 2;
-            var halfHeight = isRotation() ? selectedObject.geometry.parameters.height / 2 : selectedObject.geometry.parameters.width / 2;
+            var halfWidth = isRotation() ? getWidthSelectedObject() / 2 : getLenghtSelectedObject() / 2;
+            var halfHeight = isRotation() ? getLenghtSelectedObject() / 2 : getWidthSelectedObject() / 2;
             var maxX = gridSizeX / 2 - drift - halfWidth;
             var minX = -gridSizeX / 2 + drift + halfWidth;
             var maxY = gridSizeY / 2 - drift - halfHeight;
@@ -585,11 +622,10 @@ use app\models\work\ObjectWork;
         if(selectedObject)
         {
             isDragging = true;
-
             updateBoxHelper();
 
-            selectedObjectRotateX = selectedObject.geometry.parameters.width % 2 === 0;
-            selectedObjectRotateY = selectedObject.geometry.parameters.height % 2 === 0;
+            selectedObjectRotateX = getWidthSelectedObject() % 2 === 0;
+            selectedObjectRotateY = getLenghtSelectedObject() % 2 === 0;
 
             isZoom = false;
         }
@@ -634,16 +670,27 @@ use app\models\work\ObjectWork;
         event.preventDefault(); // Отключаем стандартное контекстное меню
         if (selectedObject)
         {
+            const costElement = document.getElementById('cost');
+            costElement.textContent = parseFloat(costElement.textContent) - parseFloat(selectedObject.name);
+
             scene.remove(selectedObject);
             gridMesh.children.forEach((cell) => {
                 cell.material.color.set('#808080');
             });
+
+            selectedObjectRotateX = false;
+            selectedObjectRotateY = false;
+            selectedObjectRotatePoint.clear();
+            selectedObject = null;
+            
+            scene.remove(boxHelper);
         }
+
+        onMouseUp();
     }
 
     // Добавляем обработчик события на клик правой кнопкой мыши
-    window.addEventListener('contextmenu', onMouseRightClick, false);
-
+    sceneContainer.addEventListener('contextmenu', onMouseRightClick, false);
     sceneContainer.addEventListener('mousemove', dragAndDrop, false);
     sceneContainer.addEventListener('mousedown', onMouseDown, false);
     sceneContainer.addEventListener('mouseup', onMouseUp, false);
