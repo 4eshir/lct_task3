@@ -107,7 +107,7 @@ use yii\widgets\ActiveForm;
 
         gridSizeX = dateObj.result.matrixCount.width + 1;
         gridSizeY = dateObj.result.matrixCount.height + 1;
-        gridSizeZ = dateObj.result.matrixCount.maxHeight + 10;
+        gridSizeZ = dateObj.result.matrixCount.maxHeight + 15;
 
         var gridColor = new THREE.Color('#808080');
 
@@ -178,7 +178,7 @@ use yii\widgets\ActiveForm;
                         const geometry = new THREE.BoxGeometry(dateObj.result.objects[index].length, dateObj.result.objects[index].width, dateObj.result.objects[index].height);
                         const oneObject = new THREE.Mesh(geometry, material);
 
-                        oneObject.position.set(dateObj.result.objects[index].dotCenter.x + rotateX, dateObj.result.objects[index].dotCenter.y + rotateY, 0.5);
+                        oneObject.position.set(dateObj.result.objects[index].dotCenter.x + rotateX, dateObj.result.objects[index].dotCenter.y + rotateY, dateObj.result.objects[index].height / 2);
                         oneObject.rotation.z = rotation;
                         scene.add(oneObject);
                         console.error('Error loading 3D model', error);

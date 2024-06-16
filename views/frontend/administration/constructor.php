@@ -110,7 +110,7 @@ use app\models\work\ObjectWork;
 
         if (!link)
         {
-            link = 'models/educational/Маятник Ньютона с подложкой.glb';
+            link = 'models/educational/качели-балансир Бревно пробный.glb';
         }
 
         loader.load(
@@ -194,11 +194,11 @@ use app\models\work\ObjectWork;
     // Переменные для отслеживания перемещения объекта
     var isDragging = false;
     var selectedObject = null;
+    var isModel = false;
     var axisZ = 2;   // Высота на которую будем поднимать объекты при перемещении
     var offset = new THREE.Vector3();
 
-    var outlineMeshSelectedObject = null;
-    var outlineMeshSelectedObjectHover = null;
+    var boxHelper = null;
 
     var selectedObjectRotateX = false;
     var selectedObjectRotateY = false;
@@ -320,7 +320,7 @@ use app\models\work\ObjectWork;
         raycaster.params.PointsCloud = { threshold: 10 };
         raycaster.setFromCamera(mouse, camera);
 
-        return raycaster.intersectObjects(interactiveObjects);
+        return raycaster.intersectObjects(interactiveObjects, true);
     }
 
     // Функция для добавления границ на объект при наведении
@@ -330,31 +330,40 @@ use app\models\work\ObjectWork;
         {
             var intersects = getIntersects(event);
 
-            if (outlineMeshSelectedObjectHover) {
-                selectedObject.remove(outlineMeshSelectedObjectHover);
-                outlineMeshSelectedObjectHover = null;
-                selectedObject = null;
+            selectedObject = null;
+            isModel = false;
+
+            if (boxHelper)
+            {
+                scene.remove(boxHelper);
+                boxHelper = null;
             }
 
             if (intersects.length > 0) {
                 selectedObject = intersects[0].object;
 
+                // Дополнительная проверка для сложнополигональных объектов
+                for (let i = 0; i < interactiveObjects.length; i++)
+                {
+                    if (interactiveObjects[i] === intersects[0].object.parent)
+                    {
+                        selectedObject = intersects[0].object.parent;
+                        isModel = true;
+                        break;
+                    }
+                }
+
                 if (blockObjectSelection) {
                     if (blockObjectSelection !== selectedObject) {
                         intersects = null;
                         selectedObject = null;
+                        isModel = false;
                     }
                 }
 
                 if (selectedObject)
                 {
-                    intersectionPoint = intersects[0].point;
-                    offset.copy(intersectionPoint).sub(selectedObject.position);
-
-                    const outlineMaterial = new THREE.MeshBasicMaterial({color: 0x0fff00, side: THREE.BackSide});
-                    outlineMeshSelectedObjectHover = new THREE.Mesh(selectedObject.geometry, outlineMaterial);
-                    outlineMeshSelectedObjectHover.scale.set(1.05, 1.05, 1.05);
-                    selectedObject.add(outlineMeshSelectedObjectHover);
+                    updateBoxHelper();
                 }
             }
         }
@@ -369,6 +378,7 @@ use app\models\work\ObjectWork;
         }
 
         selectedObject.position.set(newDot.x, newDot.y, newZ);
+        boxHelper.position.set(newDot.x, newDot.y, newZ);
 
         setColorGridMesh(); // Обновляем тени
     }
@@ -406,10 +416,18 @@ use app\models\work\ObjectWork;
         return Number.isInteger(selectedObject.rotation.z / Math.PI);
     }
 
+    function getWidthSelectedObject()
+    {
+        const boundingBox = new THREE.Box3().setFromObject(selectedObject);
+        const width = boundingBox.max.x - boundingBox.min.x;
+        return width;
+    }
+
     // Отрисовка тени на сцене
     function setColorGridMesh()
     {
-        var widthObject = isRotation() ? selectedObject.geometry.parameters.width : selectedObject.geometry.parameters.height;
+        console.log(getWidthSelectedObject());
+        /*var widthObject = isRotation() ? selectedObject.geometry.parameters.width : selectedObject.geometry.parameters.height;
         var heightObject = isRotation() ? selectedObject.geometry.parameters.height : selectedObject.geometry.parameters.width;
 
         var dotsObject = [];
@@ -445,7 +463,7 @@ use app\models\work\ObjectWork;
                     break;
                 }
             }
-        })
+        })*/
     }
 
     // Проверка пересечения
@@ -479,6 +497,29 @@ use app\models\work\ObjectWork;
         }
 
         return true;
+    }
+
+    // Отрисовка границ объекта
+    function updateBoxHelper(drag = null)
+    {
+        scene.remove(boxHelper);
+        boxHelper = new THREE.BoxHelper(selectedObject, 0x0fff00);
+        scene.add(boxHelper);
+
+        // Рассчет общих границ для всех объектов в группе
+        var boundingBox = new THREE.Box3();
+        selectedObject.traverse(function(obj) {
+            if (obj.geometry) {
+                obj.geometry.computeBoundingBox();
+                boundingBox.expandByPoint(obj.geometry.boundingBox.min);
+                boundingBox.expandByPoint(obj.geometry.boundingBox.max);
+            }
+        });
+
+        // Подгоняем размеры и позицию оболочки
+        boxHelper.scale.setFromMatrixScale(selectedObject.matrixWorld);
+        boxHelper.position.copy(boundingBox.getCenter());
+        boxHelper.update(selectedObject);
     }
 
     // Логика перемещения объекта
@@ -529,6 +570,7 @@ use app\models\work\ObjectWork;
             updatePositionSelectedObject(coordinate.getPoint());
 
             setColorGridMesh();
+            updateBoxHelper();
         }
     }
 
@@ -538,10 +580,7 @@ use app\models\work\ObjectWork;
         {
             isDragging = true;
 
-            const outlineMaterial = new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.BackSide});
-            outlineMeshSelectedObject = new THREE.Mesh(selectedObject.geometry, outlineMaterial);
-            outlineMeshSelectedObject.scale.set(1.05, 1.05, 1.05);
-            selectedObject.add(outlineMeshSelectedObject);
+            updateBoxHelper();
 
             selectedObjectRotateX = selectedObject.geometry.parameters.width % 2 === 0;
             selectedObjectRotateY = selectedObject.geometry.parameters.height % 2 === 0;
@@ -558,11 +597,6 @@ use app\models\work\ObjectWork;
     function onMouseUp()
     {
         isDragging = false;
-
-        if (outlineMeshSelectedObject) {
-            selectedObject.remove(outlineMeshSelectedObject);
-            outlineMeshSelectedObject = null;
-        }
 
         if (selectedObject)
         {

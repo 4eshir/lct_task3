@@ -266,7 +266,7 @@ use yii\widgets\ActiveForm;
                         const geometry = new THREE.BoxGeometry(dateObj.result.objects[index].length, dateObj.result.objects[index].width, dateObj.result.objects[index].height);
                         const oneObject = new THREE.Mesh(geometry, material);
 
-                        oneObject.position.set(dateObj.result.objects[index].dotCenter.x + rotateX, dateObj.result.objects[index].dotCenter.y + rotateY, 0.5);
+                        oneObject.position.set(dateObj.result.objects[index].dotCenter.x + rotateX, dateObj.result.objects[index].dotCenter.y + rotateY, dateObj.result.objects[index].height / 2);
                         oneObject.rotation.z = rotation;
                         scene.add(oneObject);
                         objectsToRemove.push(oneObject);
