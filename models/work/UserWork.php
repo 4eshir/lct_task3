@@ -47,8 +47,10 @@ class UserWork extends User
     public static function logout()
     {
         $entity = self::getAuthUser();
-        $entity->auth_flag = 0;
-        $entity->save();
+        if ($entity) {
+            $entity->auth_flag = 0;
+            $entity->save();
+        }
     }
 
 
