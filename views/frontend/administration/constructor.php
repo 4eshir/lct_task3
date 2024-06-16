@@ -48,8 +48,8 @@ use app\models\work\ObjectWork;
 ?>
 
 <script>
-    var gridSizeX = '<?php echo json_decode($model->getSize(), true)['width'];?>';
-    var gridSizeY = '<?php echo json_decode($model->getSize(), true)['length'];?>';
+    var gridSizeX = '<?php echo json_decode($model->getSize(), true)['width'] + 1;?>';
+    var gridSizeY = '<?php echo json_decode($model->getSize(), true)['length'] + 1;?>';
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/build/three.min.js"></script>
@@ -108,6 +108,12 @@ use app\models\work\ObjectWork;
         const randomColor = Math.floor(Math.random() * 16777215).toString(16);
         var material = new THREE.MeshBasicMaterial({transparent: true, color: parseInt(randomColor, 16), side: THREE.DoubleSide });
 
+        if (height / 3 > axisZ || gridSizeZ < 15 + height)
+        {
+            axisZ = height / 3 < 2 ? 3 : height / 3;
+            gridSizeZ = height + 15;
+        }
+
         if (!link)
         {
             link = 'models/educational/качели-балансир Бревно пробный.glb';
@@ -128,7 +134,7 @@ use app\models\work\ObjectWork;
                     }
                 });
                 model.scale.set(1, 1, 1);
-                model.position.set(0, 0, 0);
+                model.position.set(0 + rotateX, 0 + rotateY, 0);
 
                 // Добавляем модель в сцену
                 scene.add(model);
@@ -500,7 +506,7 @@ use app\models\work\ObjectWork;
     }
 
     // Отрисовка границ объекта
-    function updateBoxHelper(drag = null)
+    function updateBoxHelper()
     {
         scene.remove(boxHelper);
         boxHelper = new THREE.BoxHelper(selectedObject, 0x0fff00);

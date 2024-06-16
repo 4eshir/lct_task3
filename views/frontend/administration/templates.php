@@ -421,7 +421,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             }
                         });
                         model.scale.set(1, 1, 1);
-                        //model.scale.set(dateObj.result.objects[index].length, dateObj.result.objects[index].width, dateObj.result.objects[index].height);
+                        model.rotation.z = rotation;
                         model.position.set(dateObj.result.objects[index].dotCenter.x + rotateX, dateObj.result.objects[index].dotCenter.y + rotateY, 0);
 
                         // Добавляем модель в сцену
