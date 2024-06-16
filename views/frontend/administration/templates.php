@@ -331,10 +331,10 @@ $this->params['breadcrumbs'][] = $this->title;
         datePars = JSON.parse(date);
         document.getElementById('cost').textContent = datePars.analytic.data.summary;
         document.getElementById('workers_count').textContent = datePars.analytic.data.workers_count;
-        document.getElementById('install_time_parallel').textContent = datePars.analytic.data.install_time_parallel;
-        document.getElementById('install_time_sequence').textContent = datePars.analytic.data.install_time_sequence;
-        document.getElementById('created_time_parallel').textContent = datePars.analytic.data.created_time_parallel;
-        document.getElementById('created_time_sequence').textContent = datePars.analytic.data.created_time_sequence;
+        document.getElementById('install_time_sequence').textContent = datePars.analytic.data.install_time_parallel;
+        document.getElementById('install_time_parallel').textContent = datePars.analytic.data.install_time_sequence;
+        document.getElementById('created_time_sequence').textContent = datePars.analytic.data.created_time_parallel;
+        document.getElementById('created_time_parallel').textContent = datePars.analytic.data.created_time_sequence;
         document.getElementById('creators_list').textContent = datePars.analytic.data.creators_list;
         document.getElementById('style').textContent = datePars.analytic.data.style;
     }
