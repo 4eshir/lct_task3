@@ -93,7 +93,7 @@ class DemoController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $this->facade->generateTerritoryArrangement(
                 TerritoryConcept::TYPE_SELF_VOTES,
-                1,
+                21,
                 $model->addGenerateType,
                 null,
                 [
@@ -113,6 +113,7 @@ class DemoController extends Controller
 
             $modelAnal = new AnalyticModel();
             $modelAnal->fill($this->facade->model);
+            $modelAnal->fillAdd($this->facade->model, TerritoryWork::findOne(['id' => 21]));
 
             return $this->render('generate', [
                 'model' => $model,

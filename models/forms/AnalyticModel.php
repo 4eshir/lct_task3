@@ -4,7 +4,10 @@
 namespace app\models\forms;
 
 
+use app\components\coordinates\LocalCoordinatesManager;
 use app\facades\ArrangementModelFacade;
+use app\models\ObjectExtended;
+use app\models\work\TerritoryWork;
 
 class AnalyticModel
 {
@@ -16,6 +19,8 @@ class AnalyticModel
     public $workersCount;
     public $creators;
     public $style;
+
+    public $addData;
 
     public $uploadFlag = true;
 
@@ -43,5 +48,21 @@ class AnalyticModel
     public function getPrettyCreators()
     {
         return implode(', ', $this->creators);
+    }
+
+    public function fillAdd(ArrangementModelFacade $model, TerritoryWork $territory)
+    {
+        $result = [];
+        foreach ($model->objectsPosition as $objectExt) {
+            /** @var ObjectExtended $objectExt */
+            $wgs = LocalCoordinatesManager::convertLocalToWGS84(['x' => $objectExt->left, 'y' => $objectExt->top], ['latitude' => $territory->latitude, 'longitude' => $territory->longitude]);
+            $result[] = [
+                'name' => $objectExt->object->name,
+                'type' => $objectExt->object->objectType->name,
+                'coord_x' => $wgs['latitude'],
+                'coord_y' => $wgs['longitude'],
+            ];
+        }
+        $this->addData = $result;
     }
 }
