@@ -1,5 +1,6 @@
 <?php
 
+use app\components\arrangement\TerritoryConcept;
 use app\facades\TerritoryFacade;
 use app\models\forms\AnalyticModel;
 use yii\helpers\Html;
@@ -57,12 +58,23 @@ use yii\widgets\ActiveForm;
                 <span id="rangeValue4"><?= $model->game == 0 ? 0.1 : $model->game ?></span>
             </div>
         </div>
+    </div>
 
+    <div class="row-block" style="border-radius: 0; margin-top: 0">
         <div class="float-counter">
             <label class="row-label">Тип генерации</label>
             <?= $form->field($model, 'addGenerateType')->dropDownList([
                 TerritoryFacade::OPTIONS_DEFAULT => 'Стандартная генерация',
                 TerritoryFacade::OPTIONS_BUDGET_ECONOMY => 'Эконом-генерация',
+            ])->label(false) ?>
+        </div>
+
+        <div class="float-counter">
+            <label class="row-label">Уровень наполненности</label>
+            <?= $form->field($model, 'fullness')->dropDownList([
+                TerritoryConcept::TYPE_FULLNESS_MIN => 'Минимальный',
+                TerritoryConcept::TYPE_FULLNESS_MID => 'Средний',
+                TerritoryConcept::TYPE_FULLNESS_MAX => 'Максимальный',
             ])->label(false) ?>
         </div>
     </div>
@@ -103,6 +115,8 @@ use yii\widgets\ActiveForm;
         padding: 10px;
         background-color: whitesmoke;
         border-radius: 10px 10px 0 0;
+        padding-left: 30px;
+        padding-right: 30px;
     }
 
     .row-block:before {
@@ -266,7 +280,7 @@ use yii\widgets\ActiveForm;
                         const geometry = new THREE.BoxGeometry(dateObj.result.objects[index].length, dateObj.result.objects[index].width, dateObj.result.objects[index].height);
                         const oneObject = new THREE.Mesh(geometry, material);
 
-                        oneObject.position.set(dateObj.result.objects[index].dotCenter.x + rotateX, dateObj.result.objects[index].dotCenter.y + rotateY, dateObj.result.objects[index].height / 2);
+                        oneObject.position.set(dateObj.result.objects[index].dotCenter.x + rotateX, dateObj.result.objects[index].dotCenter.y + rotateY, 0.5);
                         oneObject.rotation.z = rotation;
                         scene.add(oneObject);
                         objectsToRemove.push(oneObject);

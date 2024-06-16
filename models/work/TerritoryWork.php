@@ -21,7 +21,9 @@ class TerritoryWork extends Territory
 
     public static function GetAllTerritories()
     {
-        $data = TerritoryWork::find()->all();
+        $tIds = ArrayHelper::getColumn(AgesWeightChangeableWork::find()->all(), 'territory_id');
+
+        $data = TerritoryWork::find()->where(['IN', 'id', $tIds])->all();
 
         $result = ArrayHelper::map($data, 'id', 'name');
 

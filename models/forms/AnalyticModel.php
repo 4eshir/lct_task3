@@ -17,6 +17,8 @@ class AnalyticModel
     public $creators;
     public $style;
 
+    public $uploadFlag = true;
+
     public function fill(ArrangementModelFacade $model)
     {
         $this->summaryCost = $model->calculateBudget();

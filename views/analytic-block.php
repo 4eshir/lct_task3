@@ -1,6 +1,9 @@
 <?php
 
 /** @var $model \app\models\forms\AnalyticModel */
+
+use yii\helpers\Html;
+
 ?>
 
 
@@ -13,7 +16,11 @@
     <p><b>Необходимо работников для установки (при условии разных работников на каждый МАФ):</b> <?= $model->workersCount ?> ч.</p>
     <p><b>Производители:</b> <?= $model->getPrettyCreators() ?></p>
     <p><b>Стиль:</b> <?= $model->getPrettyStyle() ?></p>
+    <?php if ($model->uploadFlag): ?>
+        <?= Html::a('Выгрузить расстановку в XML', ['/backend/demo/upload-xml'], ['class' => 'btn btn-primary']) ?>
+    <?php endif; ?>
 </div>
+
 
 
 <style>

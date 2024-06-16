@@ -14,13 +14,14 @@ class GenerateByParamsForm extends Model
     public $game = 0;
 
     public $addGenerateType = TerritoryFacade::OPTIONS_DEFAULT;
+    public $fullness = TerritoryFacade::OPTIONS_DEFAULT;
 
     public function rules()
     {
         return [
             [['recreation', 'sport', 'education', 'game'], 'double'],
-            [['addGenerateType'], 'integer'],
-            [['recreation', 'sport', 'education', 'game', 'addGenerateType'], 'required'],
+            [['addGenerateType', 'fullness'], 'integer'],
+            [['recreation', 'sport', 'education', 'game', 'addGenerateType', 'fullness'], 'required'],
         ];
     }
 
@@ -32,6 +33,7 @@ class GenerateByParamsForm extends Model
             'education' => 'Приоритет развивающих МАФ',
             'game' => 'Приоритет игровых МАФ',
             'addGenerateType' => 'Тип генерации',
+            'fullness' => 'Уровень наполненности',
         ];
     }
 }

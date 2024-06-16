@@ -6,9 +6,11 @@ use app\components\arrangement\TemplatesManager;
 use app\components\arrangement\TerritoryConcept;
 use app\components\coordinates\LocalCoordinatesManager;
 use app\facades\TerritoryFacade;
+use app\helpers\XmlHelper;
 use app\models\forms\AnalyticModel;
 use app\models\forms\demo\GenerateAnalogForm;
 use app\models\forms\demo\GenerateByParamsForm;
+use app\models\forms\DownloadXMLForm;
 use app\models\ObjectExtended;
 use app\models\work\ObjectWork;
 use app\models\work\TerritoryWork;
@@ -37,6 +39,8 @@ class DemoController extends Controller
     public function actionGenerateTemplateAjax($tId)
     {
         $this->facade->generateTerritoryArrangement(TerritoryConcept::TYPE_BASE_WEIGHTS, 1, TerritoryFacade::OPTIONS_DEFAULT, $tId);
+        $this->facade->correctArrangement();
+
         $matrix = $this->facade->getRawMatrix();
         $objectsList = $this->facade->model->objectsPosition;
         $resultObjList = [];
@@ -103,6 +107,10 @@ class DemoController extends Controller
                 ]
             );
 
+            $this->facade->correctArrangement($model->fullness);
+
+            Yii::$app->session->set('facade', serialize($this->facade));
+
             $modelAnal = new AnalyticModel();
             $modelAnal->fill($this->facade->model);
 
@@ -137,6 +145,7 @@ class DemoController extends Controller
 
             $modelAnal1 = new AnalyticModel();
             $modelAnal1->fill($this->facade->model);
+            $modelAnal1->uploadFlag = false;
 
             $this->facade->generateTerritoryArrangement(
                 TerritoryConcept::TYPE_BASE_WEIGHTS,
@@ -148,6 +157,8 @@ class DemoController extends Controller
             $this->facade->correctArrangement(
                 $model->fullness,
                 $model->fullness == TerritoryConcept::TYPE_FULLNESS_ORIGINAL ? ['originalFullness' => $originalFullness] : []);
+
+            Yii::$app->session->set('facade', serialize($this->facade));
 
             $modelAnal2 = new AnalyticModel();
             $modelAnal2->fill($this->facade->model);
@@ -173,5 +184,23 @@ class DemoController extends Controller
         }
         $this->facade->assemblyFixedArrangementByTerritoryId($territoryId);
         return $this->facade->model->getDataForScene($territoryId);
+    }
+
+    public function actionUploadXml()
+    {
+
+
+        if (Yii::$app->session->has('facade')) {
+            header('Content-Type: text/xml');
+            header('Content-Disposition: attachment; filename="filename.xml"');
+
+            $facade = unserialize(Yii::$app->session->get('facade'));
+            echo XmlHelper::generateArrangementFile($facade->model);
+
+            exit();
+        }
+
+        return false;
+
     }
 }

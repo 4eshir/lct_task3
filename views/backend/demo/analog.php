@@ -25,16 +25,18 @@ use yii\widgets\ActiveForm;
 
 <div class="object-work-form">
 
-    <?php $form = ActiveForm::begin(['id' => 'generate-form']); ?>
+    <div class="form-block">
+        <?php $form = ActiveForm::begin(['id' => 'generate-form']); ?>
 
-    <?= $form->field($model, 'analogTerritoryId')->dropDownList(TerritoryWork::getFixedTerritories(), ['prompt' => '--']) ?>
+        <?= $form->field($model, 'analogTerritoryId')->dropDownList(TerritoryWork::getFixedTerritories(), ['prompt' => '--']) ?>
 
-    <?= $form->field($model, 'fullness')->dropDownList([
-        TerritoryConcept::TYPE_FULLNESS_ORIGINAL => 'Оригинальная',
-        TerritoryConcept::TYPE_FULLNESS_MAX => 'Максимум',
-        TerritoryConcept::TYPE_FULLNESS_MID => 'Средняя',
-        TerritoryConcept::TYPE_FULLNESS_MIN => 'Низкая',
-    ]) ?>
+        <?= $form->field($model, 'fullness')->dropDownList([
+            TerritoryConcept::TYPE_FULLNESS_ORIGINAL => 'Оригинальная',
+            TerritoryConcept::TYPE_FULLNESS_MAX => 'Максимум',
+            TerritoryConcept::TYPE_FULLNESS_MID => 'Средняя',
+            TerritoryConcept::TYPE_FULLNESS_MIN => 'Низкая',
+        ]) ?>
+    </div>
 
     <div class="form-group">
         <?= Html::submitButton('Сгенерировать', ['class' => 'btn btn-success', 'style' => 'width: 100%;']) ?>
@@ -50,25 +52,61 @@ use yii\widgets\ActiveForm;
         <?= $data ?>
     </div>
 
-    <h3>Оригинальное размещение объектов на территории</h3>
-    <?php if ($modelAnal1): ?>
-        <?= $this->render('/analytic-block', [
-            'model' => $modelAnal1,
-        ]) ?>
-    <?php endif; ?>
-    <div id="scene-container-1" class="scene-container"></div>
-    <div id="anal-block-1"></div>
+    <div class="scene-block1">
+        <h3>Оригинальное размещение объектов на территории</h3>
+        <?php if ($modelAnal1): ?>
+            <?= $this->render('/analytic-block', [
+                'model' => $modelAnal1,
+            ]) ?>
+        <?php endif; ?>
+        <div id="scene-container-1" class="scene-container"></div>
+        <div id="anal-block-1"></div>
+    </div>
 
-    <h3>Сгенерированное размещение объектов на территории</h3>
-    <?php if ($modelAnal2): ?>
-        <?= $this->render('/analytic-block', [
-            'model' => $modelAnal2,
-        ]) ?>
-    <?php endif; ?>
-    <div id="scene-container-2" class="scene-container"></div>
-    <div id="anal-block-2"></div>
+    <div class="scene-block2">
+        <h3>Сгенерированное размещение объектов на территории</h3>
+        <?php if ($modelAnal2): ?>
+            <?= $this->render('/analytic-block', [
+                'model' => $modelAnal2,
+            ]) ?>
+        <?php endif; ?>
+
+        <div id="scene-container-2" class="scene-container"></div>
+        <div id="anal-block-2"></div>
+    </div>
+
+
 
 </div>
+
+<style>
+    .form-block {
+        border-radius: 10px 10px 0 0;
+        background-color: whitesmoke;
+        padding: 15px;
+        margin-top: 10px;
+        margin-bottom: -5px;
+    }
+
+    .scene-block1 {
+        border-radius: 15px;
+        background-color: #88b6f4;
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+
+    .scene-block2 {
+        border-radius: 15px;
+        background-color: #d05d7e;
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+
+    h3 {
+        font-family: "Nunito", sans-serif;
+        font-size: 26px;
+    }
+</style>
 
 <?php
 $script = <<< JS
@@ -184,7 +222,7 @@ $this->registerJs($script);
 
         gridSizeX = dateObj.result.matrixCount.width + 1;
         gridSizeY = dateObj.result.matrixCount.height + 1;
-        gridSizeZ = dateObj.result.matrixCount.maxHeight + 15;
+        gridSizeZ = dateObj.result.matrixCount.maxHeight + 10;
 
         var gridColor = new THREE.Color('#808080');
 
@@ -257,7 +295,7 @@ $this->registerJs($script);
                         const geometry = new THREE.BoxGeometry(dateObj.result.objects[index].length, dateObj.result.objects[index].width, dateObj.result.objects[index].height);
                         const oneObject = new THREE.Mesh(geometry, material);
 
-                        oneObject.position.set(dateObj.result.objects[index].dotCenter.x + rotateX, dateObj.result.objects[index].dotCenter.y + rotateY, dateObj.result.objects[index].height / 2);
+                        oneObject.position.set(dateObj.result.objects[index].dotCenter.x + rotateX, dateObj.result.objects[index].dotCenter.y + rotateY, 0.5);
                         oneObject.rotation.z = rotation;
                         scenes[id].add(oneObject);
                         objectsToRemove[id].push(oneObject);
