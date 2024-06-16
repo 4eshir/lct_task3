@@ -89,7 +89,7 @@ class SiteController extends Controller
 
         $model = new AdminLoginForm();
 
-        if (UserWork::getAuthUser()->role == UserWork::ROLE_GOD) {
+        if (UserWork::getAuthUser() !== null && UserWork::getAuthUser()->role == UserWork::ROLE_GOD) {
             return $this->redirect(['/backend/admin/index']);
         }
 
