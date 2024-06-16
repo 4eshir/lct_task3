@@ -170,18 +170,6 @@ use app\models\work\ObjectWork;
         costElement.textContent = parseFloat(costElement.textContent) + parseFloat(name);
     }
 
-    var rectangleGeometry = new THREE.BoxGeometry(2, 2, 1);
-    var rectangleMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.8, color: 0x0000ff });
-    var rectangle = new THREE.Mesh(rectangleGeometry, rectangleMaterial);
-    rectangle.position.set(3, 0, 0.5);
-    scene.add(rectangle);
-
-    var sphereGeometry = new THREE.BoxGeometry(2, 3, 1)
-    var sphereMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.8, color: 0xff0000, side: THREE.DoubleSide });
-    var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    sphere.position.set(-3, 0, 0.5);
-    scene.add(sphere);
-
     // Основные механики
     //--------------------------------
 
@@ -668,8 +656,7 @@ use app\models\work\ObjectWork;
     // Обработчик события для нажатия правой кнопки мыши
     function onMouseRightClick(event) {
         event.preventDefault(); // Отключаем стандартное контекстное меню
-        if (selectedObject)
-        {
+        if (selectedObject) {
             const costElement = document.getElementById('cost');
             costElement.textContent = parseFloat(costElement.textContent) - parseFloat(selectedObject.name);
 
@@ -681,8 +668,17 @@ use app\models\work\ObjectWork;
             selectedObjectRotateX = false;
             selectedObjectRotateY = false;
             selectedObjectRotatePoint.clear();
+
+            for (let i = 0; i < interactiveObjects.length; i++)
+            {
+                if (interactiveObjects[i] === selectedObject)
+                {
+                    interactiveObjects.splice(i, 1);
+                    break;
+                }
+            }
+
             selectedObject = null;
-            
             scene.remove(boxHelper);
         }
 

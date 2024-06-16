@@ -81,11 +81,35 @@ $this->params['breadcrumbs'][] = $this->title;
 
 </div>
 
+<div class="analytic-block">
+    <p><b>Общая стоимость:</b> <span id="cost"></span> ₽</p>
+    <p><b>Максимальное время производства МАФ:</b> <span id="created_time_parallel"></span> д.</p>
+    <p><b>Минимальное время производства МАФ:</b> <span id="created_time_sequence"></span> д.</p>
+    <p><b>Максимальное время установки:</b> <span id="install_time_parallel"></span> д.</p>
+    <p><b>Минимальное время установки:</b> <span id="install_time_sequence"></span> д.</p>
+    <p><b>Необходимо работников для установки (при условии разных работников на каждый МАФ):</b> <span id="workers_count"></span> ч.</p>
+    <p><b>Производители:</b> <span id="creators_list"></span></p>
+    <p><b>Стиль:</b> <span id="style"></span></p>
+</div>
+
+
 <div id="scene-container"></div>
 <div id="anal-block"></div>
 
 
 <style>
+    .analytic-block {
+        border-radius: 10px;
+        background-color: #f5f5f5;
+        padding: 10px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+    .analytic-block > p {
+        font-family: "Nunito", sans-serif;
+        font-size: 16px;
+    }
     #scene-container {
         height: 600px;
     }
@@ -277,8 +301,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 if (xhr.status >= 200 && xhr.status < 300) {
                     scrollToAnchor('resultId');
                     removeFromScene();
-
                     init(xhr.responseText);
+                    addDate(xhr.responseText);
                 } else {
                     console.error("Ошибка при загрузке данных: " + xhr.status);
                 }
@@ -301,8 +325,20 @@ $this->params['breadcrumbs'][] = $this->title;
             }
         }
     });
-</script>
 
+    function addDate(date)
+    {
+        datePars = JSON.parse(date);
+        document.getElementById('cost').textContent = datePars.analytic.data.summary;
+        document.getElementById('workers_count').textContent = datePars.analytic.data.workers_count;
+        document.getElementById('install_time_parallel').textContent = datePars.analytic.data.install_time_parallel;
+        document.getElementById('install_time_sequence').textContent = datePars.analytic.data.install_time_sequence;
+        document.getElementById('created_time_parallel').textContent = datePars.analytic.data.created_time_parallel;
+        document.getElementById('created_time_sequence').textContent = datePars.analytic.data.created_time_sequence;
+        document.getElementById('creators_list').textContent = datePars.analytic.data.creators_list;
+        document.getElementById('style').textContent = datePars.analytic.data.style;
+    }
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/examples/js/loaders/GLTFLoader.js"></script>
