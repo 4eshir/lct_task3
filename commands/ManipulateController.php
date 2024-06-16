@@ -28,6 +28,16 @@ class ManipulateController extends Controller
     {
         $oldWeights = AgesWeightWork::find()->orderBy(['ages_interval_id' => SORT_ASC])->all();
         $newWeights = AgesWeightChangeableWork::find()->where(['territory_id' => $t])->orderBy(['ages_interval_id' => SORT_ASC])->all();
+        if (count($newWeights) == 0) {
+            $newWeights = [];
+            for ($i = 0; $i < count($oldWeights); $i++) {
+                $w = new AgesWeightChangeableWork();
+                $w->ages_interval_id = $i + 1;
+                $w->territory_id = $t;
+                $w->save();
+                $newWeights[] = $w;
+            }
+        }
 
         for ($i = 0; $i < count($oldWeights); $i++) {
             /** @var AgesWeightChangeableWork[] $newWeights */

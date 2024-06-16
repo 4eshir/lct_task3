@@ -27,15 +27,15 @@ class QuestionDecisionForm extends Model
     {
         $facade = Yii::createObject(TerritoryFacade::class);
         $facade->generateTerritoryArrangement(TerritoryConcept::TYPE_BASE_WEIGHTS, $territoryId);
-        $facade->correctArrangement();
+        $facade->correctArrangement(random_int(2, 3));
         $this->territoires[] = $facade->model;
 
         $facade->generateTerritoryArrangement(TerritoryConcept::TYPE_CHANGE_WEIGHTS, $territoryId);
-        $facade->correctArrangement();
+        $facade->correctArrangement(random_int(2, 3));
         $this->territoires[] = $facade->model;
 
         $facade->generateTerritoryArrangement(TerritoryConcept::TYPE_SELF_VOTES, $territoryId, TerritoryFacade::OPTIONS_DEFAULT, null, ['votes' => $votes]);
-        $facade->correctArrangement();
+        $facade->correctArrangement(random_int(2, 3));
         $this->territoires[] = $facade->model;
     }
 }

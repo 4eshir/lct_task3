@@ -20,32 +20,35 @@ use yii\widgets\ActiveForm;
     }
 </style>
 
-<?php $form = ActiveForm::begin() ?>
+<div class="back-block">
+    <?php $form = ActiveForm::begin() ?>
 
-<?= $form->field($model, 'decision')->dropDownList([1 => 'Вариант 1', 2 => 'Вариант 2', 3 => 'Вариант 3']) ?>
+    <?= $form->field($model, 'decision')->dropDownList([1 => 'Вариант 1', 2 => 'Вариант 2', 3 => 'Вариант 3'])->label('Выберите наиболее понравившийся вариант') ?>
 
-<div class="form-group">
-    <div>
-        <?= Html::submitButton('Подтвердить выбор', ['class' => 'btn btn-success', 'name' => 'decision-button']) ?>
+    <div class="form-group">
+        <div>
+            <?= Html::submitButton('Подтвердить выбор', ['class' => 'btn btn-success', 'name' => 'decision-button', 'style' => 'width: 100%']) ?>
+        </div>
     </div>
 </div>
 
+
 <div class="territories">
-    <div class="base-weights">
+    <div class="base-weights scene-block">
         <h2>Вариант 1</h2>
         <div id="v1" style="display: none;">
             <?= var_dump($model->territoires[0]->getDataForScene($territoryId)) ?>
         </div>
         <div id="scene-container-1" class="scene"></div>
     </div>
-    <div class="change-weights">
+    <div class="change-weights scene-block">
         <h2>Вариант 2</h2>
         <div id="v2" style="display: none;">
             <?= var_dump($model->territoires[1]->getDataForScene($territoryId)) ?>
         </div>
         <div id="scene-container-2" class="scene"></div>
     </div>
-    <div class="votes">
+    <div class="votes scene-block">
         <h2>Вариант 3</h2>
         <div id="v3" style="display: none;">
             <?= var_dump($model->territoires[2]->getDataForScene($territoryId)) ?>
@@ -53,6 +56,30 @@ use yii\widgets\ActiveForm;
         <div id="scene-container-3" class="scene"></div>
     </div>
 </div>
+
+
+<style>
+    .back-block {
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 30px;
+        margin-top: 10px;
+        background-color: #f5f5f5;
+        padding-bottom: 5px;
+    }
+
+    .scene-block {
+        border-radius: 15px;
+        background-color: #88b6f4;
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+
+    h2 {
+        font-family: "Nunito", sans-serif;
+        font-size: 30px;
+    }
+</style>
 
 
 <?php ActiveForm::end() ?>
@@ -107,7 +134,7 @@ use yii\widgets\ActiveForm;
 
         gridSizeX = dateObj.result.matrixCount.width + 1;
         gridSizeY = dateObj.result.matrixCount.height + 1;
-        gridSizeZ = dateObj.result.matrixCount.maxHeight + 15;
+        gridSizeZ = dateObj.result.matrixCount.maxHeight + 10;
 
         var gridColor = new THREE.Color('#808080');
 
@@ -179,7 +206,7 @@ use yii\widgets\ActiveForm;
                         const geometry = new THREE.BoxGeometry(dateObj.result.objects[index].length, dateObj.result.objects[index].width, dateObj.result.objects[index].height);
                         const oneObject = new THREE.Mesh(geometry, material);
 
-                        oneObject.position.set(dateObj.result.objects[index].dotCenter.x + rotateX, dateObj.result.objects[index].dotCenter.y + rotateY, dateObj.result.objects[index].height / 2);
+                        oneObject.position.set(dateObj.result.objects[index].dotCenter.x + rotateX, dateObj.result.objects[index].dotCenter.y + rotateY, 0.5);
                         oneObject.rotation.z = rotation;
                         scene.add(oneObject);
                         console.error('Error loading 3D model', error);

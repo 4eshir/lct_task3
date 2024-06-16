@@ -107,7 +107,6 @@ class SiteController extends Controller
 
     public function actionLogout()
     {
-        var_dump('boobs');
         UserWork::logout();
     }
 
