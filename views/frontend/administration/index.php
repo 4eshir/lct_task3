@@ -6,13 +6,15 @@ use yii\helpers\Html;
 <div class="container1">
     <div class="block1">
         <h1 class="block-header">Шаблоны</h1>
-        <img src="/img/template-pic.png" class="block-image"/>
+        <?= Html::img('@web/img/template-pic.png', ['class' => 'block-image']) ?>
+        <!--<img src="./img/template-pic.png" class="block-image"/>-->
         <p class="block-text">Просмотрите список готовых шаблонов площадок и создайте свой</p>
         <?= Html::a('Перейти в Шаблоны', ['templates'], ['class' => 'btn btn-primary block-btn']) ?>
     </div>
     <div class="block2">
         <h1 class="block-header">Конструктор</h1>
-        <img src="/img/constructor-pic.png" class="block-image"/>
+        <?= Html::img('@web/img/constructor-pic.png', ['class' => 'block-image']) ?>
+        <!--<img src="./img/constructor-pic.png" class="block-image"/>-->
         <p class="block-text">Соберите свою собственную площадку с нуля, в соответствие с вашими запросами</p>
         <?= Html::a('Перейти в Конструктор', ['choose-constructor'], ['class' => 'btn btn-primary block-btn']) ?>
     </div>

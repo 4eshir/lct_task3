@@ -6,17 +6,20 @@ use yii\helpers\Html;
 <div class="container1">
     <div class="block1">
         <h2 class="block-header">Генерация расстановок МАФ по заданным параметрам</h2>
-        <img src="/img/filters-pic.jpg" class="block-image"/>
+        <?= Html::img('@web/img/filters-pic.jpg', ['class' => 'block-image']) ?>
+        <!--<img src="./img/filters-pic.jpg" class="block-image"/>-->
         <?= Html::a('Перейти к демо', ['generate'], ['class' => 'btn btn-primary block-btn']) ?>
     </div>
     <div class="block2">
         <h2 class="block-header">Генерация аналогов существующим расстановкам МАФ</h2>
-        <img src="/img/analog-pic.png" class="block-image"/>
+        <?= Html::img('@web/img/analog-pic.png', ['class' => 'block-image']) ?>
+        <!--<img src="./img/analog-pic.png" class="block-image"/>-->
         <?= Html::a('Перейти к демо', ['analog'], ['class' => 'btn btn-primary block-btn']) ?>
     </div>
     <div class="block3">
         <h2 class="block-header">Генерация расстановок МАФ по шаблонам</h2>
-        <img src="/img/template-pic.jpg" class="block-image" style="margin-bottom: 0"/>
+        <?= Html::img('@web/img/template-pic.jpg', ['class' => 'block-image']) ?>
+        <!--<img src="./img/template-pic.jpg" class="block-image" style="margin-bottom: 0"/>-->
         <?= Html::a('Перейти к демо', ['/frontend/administration/templates'], ['class' => 'btn btn-primary block-btn']) ?>
     </div>
 </div>

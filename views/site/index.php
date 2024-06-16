@@ -2,6 +2,8 @@
 
 /** @var yii\web\View $this */
 
+use yii\helpers\Html;
+
 $this->title = 'My Yii Application';
 ?>
 <div class="site-index">
@@ -25,7 +27,8 @@ $this->title = 'My Yii Application';
     </div>
 
     <div class="div-img">
-        <img src="/img/main-page.png" style="width: 1000px; align-items: center"/>
+        <?= Html::img('@web/img/main-page.png', ['style' => 'width: 1000px; align-items: center']) ?>
+        <!--<img src="./img/main-page.png" style="width: 1000px; align-items: center"/>-->
     </div>
 
 

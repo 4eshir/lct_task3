@@ -268,7 +268,7 @@ $this->params['breadcrumbs'][] = $this->title;
             button.classList.add('btn', 'block-btn');
             buttonContainer.appendChild(button);
             loadingIcon.classList.add('loading-icon');
-            loadingIcon.innerHTML = '<img src="/img/loading.gif" alt="Подождите...">';
+            loadingIcon.innerHTML = '<img src="./img/loading.gif" alt="Подождите...">';
             loadingIcon.style.display = 'none';
             buttonContainer.appendChild(loadingIcon);
 
